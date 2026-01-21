@@ -9,22 +9,19 @@ body {
     background: #ffffff;
     color: #000000;
     line-height: 1.5;
+    overflow-x: hidden;
 }
 
 .container {
-    max-width: 700px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 32px;
 }
 
 /* Header */
 .header {
     padding: 32px 0 24px 0;
     border-bottom: 1px solid #e5e5e5;
-    position: sticky;
-    top: 0;
-    background: #ffffff;
-    z-index: 100;
 }
 
 .header .container {
@@ -52,12 +49,12 @@ body {
     color: #000;
 }
 
-/* Prompts List - Vertical scrollable */
+/* Prompts Grid - 2 columns x 4 rows */
 .prompts-grid {
-    padding: 24px 0;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    padding: 32px 0;
 }
 
 /* Prompt Card */
@@ -66,7 +63,10 @@ body {
     border: 1px solid #e5e5e5;
     border-radius: 8px;
     padding: 24px;
+    display: flex;
+    flex-direction: column;
     transition: all 0.2s;
+    min-height: 380px;
 }
 
 .prompt-card:hover {
@@ -75,7 +75,7 @@ body {
 }
 
 .prompt-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: #000000;
     margin-bottom: 8px;
@@ -83,29 +83,30 @@ body {
 }
 
 .prompt-description {
-    font-size: 14px;
+    font-size: 13px;
     color: #666;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     line-height: 1.5;
 }
 
 .prompt-content {
+    flex: 1;
     background: #ffffff;
     border: 1px solid #e5e5e5;
     border-radius: 6px;
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
     font-family: 'SF Mono', 'Courier New', monospace;
-    font-size: 12px;
-    line-height: 1.7;
+    font-size: 11px;
+    line-height: 1.6;
     color: #333;
     overflow-y: auto;
-    max-height: 300px;
+    max-height: 200px;
     white-space: pre-wrap;
 }
 
 .prompt-content::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
 
 .prompt-content::-webkit-scrollbar-track {
@@ -126,17 +127,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    margin-top: auto;
 }
 
 .copy-btn {
     flex: 1;
-    padding: 10px 18px;
+    padding: 9px 16px;
     background: #000000;
     border: 1px solid #000000;
     color: #ffffff;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
@@ -144,7 +146,6 @@ body {
 
 .copy-btn:hover {
     background: #1a1a1a;
-    transform: translateY(-1px);
 }
 
 .copy-btn.copied {
@@ -155,17 +156,17 @@ body {
 .vote-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     background: #f5f5f5;
     border: 1px solid #e5e5e5;
     border-radius: 6px;
-    padding: 6px 12px;
+    padding: 5px 10px;
 }
 
 .vote-btn {
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 15px;
     cursor: pointer;
     padding: 4px;
     opacity: 0.3;
@@ -175,7 +176,7 @@ body {
 
 .vote-btn:hover {
     opacity: 1;
-    transform: scale(1.2);
+    transform: scale(1.15);
 }
 
 .vote-btn.voted-up {
@@ -187,23 +188,28 @@ body {
 }
 
 .vote-count {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: #000;
-    min-width: 24px;
+    min-width: 20px;
     text-align: center;
 }
 
-/* Footer spacing */
-main {
-    min-height: calc(100vh - 100px);
-    padding-bottom: 40px;
+/* Responsive */
+@media (max-width: 1024px) {
+    .prompts-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .prompt-card {
+        min-height: auto;
+    }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .container {
-        padding: 0 16px;
+        padding: 0 20px;
     }
 
     .header {
@@ -215,7 +221,7 @@ main {
     }
 
     .prompt-content {
-        max-height: 250px;
-        font-size: 11px;
+        max-height: 180px;
+        font-size: 10px;
     }
 }
