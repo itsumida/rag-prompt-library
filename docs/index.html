@@ -3,34 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAG Prompt Library - Copy & Vote</title>
-    <meta name="description" content="Production-ready RAG prompts. Copy, vote, and use.">
+    <title>RAG Prompt Library</title>
+    <meta name="description" content="Production-ready RAG prompts. Copy, vote, use.">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <h1>🎯 RAG Prompt Library</h1>
-            <p>Production-ready prompts for Retrieval-Augmented Generation</p>
-            <a href="https://github.com/itsumida/rag-prompt-library" class="github-link">View on GitHub →</a>
+            <h1>RAG Prompt Library</h1>
+            <a href="https://github.com/itsumida/rag-prompt-library" class="github-link">GitHub</a>
         </div>
     </header>
 
     <main class="container">
-        <div class="controls">
-            <button class="sort-btn active" data-sort="votes">Sort by Votes</button>
-            <button class="sort-btn" data-sort="name">Sort by Name</button>
-        </div>
-
-        <div id="prompts-container"></div>
+        <div class="prompts-grid" id="prompts-container"></div>
     </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>Open Source • MIT License • <a href="https://github.com/itsumida/rag-prompt-library">Contribute on GitHub</a></p>
-        </div>
-    </footer>
 
     <script src="assets/js/main.js"></script>
 </body>
