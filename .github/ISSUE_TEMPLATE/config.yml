@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Ask a Question
+    url: https://github.com/itsumida/rag-prompt-library/discussions/new?category=q-a
+    about: Ask questions about using prompts or RAG systems
+  - name: 💡 General Discussion
+    url: https://github.com/itsumida/rag-prompt-library/discussions
+    about: Discuss prompts, share experiences, and connect with the community
+  - name: 📚 Documentation
+    url: https://itsumida.github.io/rag-prompt-library/
+    about: View the marketing page and prompt library
