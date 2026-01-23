@@ -20,47 +20,71 @@ body {
 
 /* Header */
 .header {
-    padding: 32px 0 24px 0;
+    padding: 48px 0 40px 0;
     border-bottom: 1px solid #e5e5e5;
+    background: #fafafa;
 }
 
-.header .container {
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 32px;
+}
+
+.header-text {
+    flex: 1;
 }
 
 .header h1 {
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
     color: #000000;
+    margin-bottom: 8px;
+}
+
+.tagline {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+    max-width: 600px;
 }
 
 .github-link {
-    color: #666;
+    color: #000;
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    transition: color 0.2s;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    padding: 10px 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    background: #fff;
 }
 
 .github-link:hover {
-    color: #000;
+    opacity: 0.7;
 }
 
 /* Sort Controls */
 .sort-controls {
     display: flex;
+    align-items: center;
     gap: 12px;
-    padding: 24px 0 16px 0;
-    border-bottom: 1px solid #e5e5e5;
-    margin-bottom: 16px;
+    padding: 32px 0 24px 0;
+}
+
+.sort-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
 }
 
 .sort-btn {
-    padding: 8px 16px;
-    background: #fafafa;
+    padding: 8px 18px;
+    background: #ffffff;
     border: 1px solid #e5e5e5;
     color: #666;
     border-radius: 6px;
@@ -71,8 +95,7 @@ body {
 }
 
 .sort-btn:hover {
-    background: #f0f0f0;
-    border-color: #d0d0d0;
+    border-color: #000;
     color: #000;
 }
 
@@ -92,34 +115,35 @@ body {
 
 /* Prompt Card */
 .prompt-card {
-    background: #fafafa;
+    background: #ffffff;
     border: 1px solid #e5e5e5;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 24px;
     display: flex;
     flex-direction: column;
     transition: all 0.2s;
-    min-height: 380px;
+    min-height: 400px;
 }
 
 .prompt-card:hover {
-    border-color: #d0d0d0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-color: #c0c0c0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
 }
 
 .prompt-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     color: #000000;
     margin-bottom: 8px;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
 }
 
 .prompt-description {
     font-size: 13px;
     color: #666;
-    margin-bottom: 14px;
-    line-height: 1.5;
+    margin-bottom: 16px;
+    line-height: 1.6;
 }
 
 .prompt-content {
@@ -238,6 +262,12 @@ body {
     .prompt-card {
         min-height: auto;
     }
+
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -246,7 +276,15 @@ body {
     }
 
     .header {
-        padding: 24px 0 20px 0;
+        padding: 32px 0 28px 0;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .tagline {
+        font-size: 14px;
     }
 
     .prompt-card {
@@ -256,5 +294,9 @@ body {
     .prompt-content {
         max-height: 180px;
         font-size: 10px;
+    }
+
+    .sort-controls {
+        flex-wrap: wrap;
     }
 }

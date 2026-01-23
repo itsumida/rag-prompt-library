@@ -15,16 +15,20 @@
 </head>
 <body>
     <header class="header">
-        <div class="container">
-            <h1>RAG Prompt Library</h1>
-            <a href="https://github.com/itsumida/rag-prompt-library" class="github-link">GitHub</a>
+        <div class="container header-content">
+            <div class="header-text">
+                <h1>RAG Prompt Library</h1>
+                <p class="tagline">10 research-backed prompt templates for retrieval-augmented generation systems</p>
+            </div>
+            <a href="https://github.com/itsumida/rag-prompt-library" class="github-link" target="_blank">View on GitHub →</a>
         </div>
     </header>
 
     <main class="container">
         <div class="sort-controls">
-            <button id="sort-by-votes" class="sort-btn">Sort by Upvotes</button>
-            <button id="sort-default" class="sort-btn">Default Order</button>
+            <span class="sort-label">Sort by:</span>
+            <button id="sort-default" class="sort-btn active">Default</button>
+            <button id="sort-by-votes" class="sort-btn">Most Upvoted</button>
         </div>
         <div class="prompts-grid" id="prompts-container"></div>
     </main>
