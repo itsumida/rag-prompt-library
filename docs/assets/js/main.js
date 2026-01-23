@@ -330,77 +330,102 @@ function getUserId() {
 
 // Get vote count for a prompt
 async function getVoteCount(promptId) {
-    const { data, error } = await supabase
-        .from('votes')
-        .select('vote')
-        .eq('prompt_id', promptId);
+    try {
+        const { data, error } = await supabase
+            .from('votes')
+            .select('vote')
+            .eq('prompt_id', promptId);
 
-    if (error) {
-        console.error('Error fetching votes:', error);
+        if (error) {
+            console.error('Error fetching votes:', error);
+            return 0;
+        }
+
+        return data.reduce((sum, record) => sum + record.vote, 0);
+    } catch (err) {
+        console.error('Error in getVoteCount:', err);
         return 0;
     }
-
-    return data.reduce((sum, record) => sum + record.vote, 0);
 }
 
 // Get user's vote for a prompt
 async function getUserVote(promptId) {
-    const userId = getUserId();
-    const { data, error } = await supabase
-        .from('votes')
-        .select('vote')
-        .eq('prompt_id', promptId)
-        .eq('user_id', userId)
-        .single();
+    try {
+        const userId = getUserId();
+        const { data, error } = await supabase
+            .from('votes')
+            .select('vote')
+            .eq('prompt_id', promptId)
+            .eq('user_id', userId)
+            .single();
 
-    if (error || !data) {
+        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned, which is OK
+            console.error('Error fetching user vote:', error);
+        }
+
+        return data ? data.vote : 0;
+    } catch (err) {
+        console.error('Error in getUserVote:', err);
         return 0;
     }
-
-    return data.vote;
 }
 
 // Vote on a prompt
 async function vote(promptId, value) {
-    const userId = getUserId();
+    try {
+        const userId = getUserId();
 
-    // Check if user already voted
-    const { data: existingVote } = await supabase
-        .from('votes')
-        .select('*')
-        .eq('prompt_id', promptId)
-        .eq('user_id', userId)
-        .single();
-
-    if (existingVote) {
-        // If clicking the same button, remove vote (toggle off)
-        if (existingVote.vote === value) {
-            await supabase
-                .from('votes')
-                .delete()
-                .eq('prompt_id', promptId)
-                .eq('user_id', userId);
-        }
-        // If clicking opposite button, neutralize (remove vote)
-        else {
-            await supabase
-                .from('votes')
-                .delete()
-                .eq('prompt_id', promptId)
-                .eq('user_id', userId);
-        }
-    }
-    // No previous vote, add new vote
-    else {
-        await supabase
+        // Check if user already voted
+        const { data: existingVote, error: fetchError } = await supabase
             .from('votes')
-            .insert([
-                { prompt_id: promptId, user_id: userId, vote: value }
-            ]);
-    }
+            .select('*')
+            .eq('prompt_id', promptId)
+            .eq('user_id', userId)
+            .single();
 
-    // Return new vote count
-    return await getVoteCount(promptId);
+        if (fetchError && fetchError.code !== 'PGRST116') {
+            console.error('Error checking existing vote:', fetchError);
+        }
+
+        if (existingVote) {
+            // If clicking the same button, remove vote (toggle off)
+            if (existingVote.vote === value) {
+                const { error: deleteError } = await supabase
+                    .from('votes')
+                    .delete()
+                    .eq('prompt_id', promptId)
+                    .eq('user_id', userId);
+
+                if (deleteError) console.error('Error deleting vote:', deleteError);
+            }
+            // If clicking opposite button, neutralize (remove vote)
+            else {
+                const { error: deleteError } = await supabase
+                    .from('votes')
+                    .delete()
+                    .eq('prompt_id', promptId)
+                    .eq('user_id', userId);
+
+                if (deleteError) console.error('Error deleting vote:', deleteError);
+            }
+        }
+        // No previous vote, add new vote
+        else {
+            const { error: insertError } = await supabase
+                .from('votes')
+                .insert([
+                    { prompt_id: promptId, user_id: userId, vote: value }
+                ]);
+
+            if (insertError) console.error('Error inserting vote:', insertError);
+        }
+
+        // Return new vote count
+        return await getVoteCount(promptId);
+    } catch (err) {
+        console.error('Error in vote function:', err);
+        return 0;
+    }
 }
 
 // Copy to clipboard
@@ -425,8 +450,15 @@ async function copyToClipboard(text, button) {
 
 // Render prompt card
 async function renderPromptCard(prompt) {
-    const voteCount = await getVoteCount(prompt.id);
-    const userVote = await getUserVote(prompt.id);
+    let voteCount = 0;
+    let userVote = 0;
+
+    try {
+        voteCount = await getVoteCount(prompt.id);
+        userVote = await getUserVote(prompt.id);
+    } catch (err) {
+        console.error('Error loading vote data for prompt:', prompt.id, err);
+    }
 
     const card = document.createElement('div');
     card.className = 'prompt-card';
@@ -462,12 +494,17 @@ async function renderPrompts() {
     const container = document.getElementById('prompts-container');
     container.innerHTML = '';
 
-    for (const prompt of prompts) {
-        const card = await renderPromptCard(prompt);
-        container.appendChild(card);
-    }
+    try {
+        for (const prompt of prompts) {
+            const card = await renderPromptCard(prompt);
+            container.appendChild(card);
+        }
 
-    addEventListeners();
+        addEventListeners();
+    } catch (err) {
+        console.error('Error rendering prompts:', err);
+        container.innerHTML = '<p style="padding: 20px; text-align: center; color: #666;">Error loading prompts. Please refresh the page.</p>';
+    }
 }
 
 // Event listeners
