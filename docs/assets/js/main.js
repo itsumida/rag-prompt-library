@@ -317,58 +317,90 @@ Help users understand the reliability of the answer based on available sources.`
     }
 ];
 
-// Vote management (localStorage)
-function getVotes() {
-    const stored = localStorage.getItem('rag-votes');
-    return stored ? JSON.parse(stored) : {};
+// Vote management (Supabase)
+// Get or create user ID (stored in localStorage for user identity)
+function getUserId() {
+    let userId = localStorage.getItem('rag-user-id');
+    if (!userId) {
+        userId = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+        localStorage.setItem('rag-user-id', userId);
+    }
+    return userId;
 }
 
-function saveVotes(votes) {
-    localStorage.setItem('rag-votes', JSON.stringify(votes));
+// Get vote count for a prompt
+async function getVoteCount(promptId) {
+    const { data, error } = await supabase
+        .from('votes')
+        .select('vote')
+        .eq('prompt_id', promptId);
+
+    if (error) {
+        console.error('Error fetching votes:', error);
+        return 0;
+    }
+
+    return data.reduce((sum, record) => sum + record.vote, 0);
 }
 
-function getUserVotes() {
-    const stored = localStorage.getItem('rag-user-votes');
-    return stored ? JSON.parse(stored) : {};
+// Get user's vote for a prompt
+async function getUserVote(promptId) {
+    const userId = getUserId();
+    const { data, error } = await supabase
+        .from('votes')
+        .select('vote')
+        .eq('prompt_id', promptId)
+        .eq('user_id', userId)
+        .single();
+
+    if (error || !data) {
+        return 0;
+    }
+
+    return data.vote;
 }
 
-function saveUserVotes(userVotes) {
-    localStorage.setItem('rag-user-votes', JSON.stringify(userVotes));
-}
+// Vote on a prompt
+async function vote(promptId, value) {
+    const userId = getUserId();
 
-function getVoteCount(promptId) {
-    const votes = getVotes();
-    return votes[promptId] || 0;
-}
+    // Check if user already voted
+    const { data: existingVote } = await supabase
+        .from('votes')
+        .select('*')
+        .eq('prompt_id', promptId)
+        .eq('user_id', userId)
+        .single();
 
-function vote(promptId, value) {
-    const votes = getVotes();
-    const userVotes = getUserVotes();
-
-    // If user already voted
-    if (userVotes[promptId]) {
-        // Remove the previous vote
-        votes[promptId] = (votes[promptId] || 0) - userVotes[promptId];
-
-        // If clicking the same button, just remove vote (toggle off)
-        if (userVotes[promptId] === value) {
-            delete userVotes[promptId];
+    if (existingVote) {
+        // If clicking the same button, remove vote (toggle off)
+        if (existingVote.vote === value) {
+            await supabase
+                .from('votes')
+                .delete()
+                .eq('prompt_id', promptId)
+                .eq('user_id', userId);
         }
-        // If clicking opposite button, just neutralize (don't switch to opposite)
+        // If clicking opposite button, neutralize (remove vote)
         else {
-            delete userVotes[promptId];
+            await supabase
+                .from('votes')
+                .delete()
+                .eq('prompt_id', promptId)
+                .eq('user_id', userId);
         }
     }
     // No previous vote, add new vote
     else {
-        votes[promptId] = (votes[promptId] || 0) + value;
-        userVotes[promptId] = value;
+        await supabase
+            .from('votes')
+            .insert([
+                { prompt_id: promptId, user_id: userId, vote: value }
+            ]);
     }
 
-    saveVotes(votes);
-    saveUserVotes(userVotes);
-
-    return votes[promptId] || 0;
+    // Return new vote count
+    return await getVoteCount(promptId);
 }
 
 // Copy to clipboard
@@ -392,10 +424,9 @@ async function copyToClipboard(text, button) {
 }
 
 // Render prompt card
-function renderPromptCard(prompt) {
-    const voteCount = getVoteCount(prompt.id);
-    const userVotes = getUserVotes();
-    const userVote = userVotes[prompt.id] || 0;
+async function renderPromptCard(prompt) {
+    const voteCount = await getVoteCount(prompt.id);
+    const userVote = await getUserVote(prompt.id);
 
     const card = document.createElement('div');
     card.className = 'prompt-card';
@@ -427,13 +458,14 @@ function renderPromptCard(prompt) {
 }
 
 // Render all prompts
-function renderPrompts() {
+async function renderPrompts() {
     const container = document.getElementById('prompts-container');
     container.innerHTML = '';
 
-    prompts.forEach(prompt => {
-        container.appendChild(renderPromptCard(prompt));
-    });
+    for (const prompt of prompts) {
+        const card = await renderPromptCard(prompt);
+        container.appendChild(card);
+    }
 
     addEventListeners();
 }
@@ -451,22 +483,25 @@ function addEventListeners() {
     });
 
     document.querySelectorAll('.vote-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
             // Use currentTarget to get the button, not the clicked SVG element
             const button = e.currentTarget;
             const promptId = button.dataset.id;
             const value = parseInt(button.dataset.value);
-            const newCount = vote(promptId, value);
+
+            // Disable button during request
+            button.disabled = true;
+
+            const newCount = await vote(promptId, value);
+            const userVote = await getUserVote(promptId);
 
             const card = button.closest('.prompt-card');
             card.dataset.votes = newCount;
             card.querySelector('.vote-count').textContent = newCount;
 
-            const userVotes = getUserVotes();
-            const userVote = userVotes[promptId] || 0;
-
             card.querySelectorAll('.vote-btn').forEach(voteBtn => {
                 voteBtn.classList.remove('voted-up', 'voted-down');
+                voteBtn.disabled = false;
             });
 
             if (userVote === 1) {
@@ -474,8 +509,6 @@ function addEventListeners() {
             } else if (userVote === -1) {
                 card.querySelector('.downvote-btn').classList.add('voted-down');
             }
-
-            // Don't re-render/re-sort automatically - let user control sorting
         });
     });
 }
