@@ -77,7 +77,7 @@ body {
     color: #ffffff;
 }
 
-/* Prompts Grid - 2 columns x 5 rows */
+/* Prompts Grid - 2 columns x 4 rows */
 .prompts-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

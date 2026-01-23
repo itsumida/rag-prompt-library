@@ -1,4 +1,4 @@
-// 10 Research-Backed RAG Prompt Templates
+// 8 Research-Backed RAG Prompt Templates
 // Based on best practices from Scoutos, OpenAI community, and RAG implementation guides
 const prompts = [
     {
@@ -45,27 +45,6 @@ FORMAT YOUR RESPONSE:
 **Answer:** [Final response with citations]
 
 If context is insufficient, explain what specific information is missing.`
-    },
-    {
-        id: 'query-condensation-rag',
-        name: 'Query Condensation RAG',
-        description: 'Simplify complex queries before answering for better accuracy',
-        content: `You will handle complex questions by first condensing them to core meaning.
-
-STEP 1 - CONDENSE THE QUERY:
-Original question: {user_question}
-Core meaning: [Rewrite the question in its simplest, most direct form]
-
-STEP 2 - USE CONTEXT:
-{retrieved_documents}
-
-STEP 3 - ANSWER:
-Using the condensed query and the context above:
-- Answer the core question directly
-- Cite every fact with [chunk_id]
-- If context doesn't address the condensed query: "The provided context doesn't contain information about [core topic]"
-
-This approach ensures you understand the question's essence before attempting to answer.`
     },
     {
         id: 'self-critique-rag',
@@ -159,31 +138,6 @@ RESPONSE FORMAT:
 **GAPS:** [Information not covered by any source]
 
 Provide a unified view of what the sources collectively say.`
-    },
-    {
-        id: 'conversational-memory-rag',
-        name: 'Conversational Memory RAG',
-        description: 'Natural dialogue with conversation history awareness',
-        content: `You are a conversational assistant that maintains context across turns while grounding responses in retrieved information.
-
-CONVERSATION HISTORY:
-{conversation_history}
-
-RETRIEVED CONTEXT:
-{retrieved_documents}
-
-CURRENT QUESTION:
-{user_question}
-
-INSTRUCTIONS:
-- Use natural, friendly language
-- Reference previous conversation turns when relevant
-- Ground all factual claims in RETRIEVED CONTEXT with citations [chunk_id]
-- If the user is following up on a previous topic, acknowledge the continuity
-- If RETRIEVED CONTEXT doesn't contain needed information: "I don't see information about that in the current results"
-- Maintain conversational flow while staying factually grounded
-
-Balance natural dialogue with rigorous source attribution.`
     },
     {
         id: 'query-expansion-rag',
