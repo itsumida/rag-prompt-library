@@ -4,7 +4,7 @@ const prompts = [
     {
         id: 'grounded-basic-rag',
         name: 'Grounded Basic RAG',
-        description: 'Foundation pattern using explicit source grounding with mandatory citation markers',
+        description: 'The basic pattern - answer only from context, cite everything',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -23,7 +23,7 @@ Provide a clear, factual answer based solely on the CONTEXT provided.`
     {
         id: 'strict-citation-rag',
         name: 'Strict Citation RAG',
-        description: 'Conservative approach prohibiting inference or external knowledge integration',
+        description: 'When you need zero hallucinations - no guessing, no assumptions',
         content: `You are an AI assistant. Provide accurate responses based STRICTLY on the provided search results.
 
 CONTEXT:
@@ -46,7 +46,7 @@ If CONTEXT is irrelevant or insufficient: "I cannot answer this question as the 
     {
         id: 'concise-grounded-rag',
         name: 'Concise Grounded RAG',
-        description: 'Optimized for brevity while maintaining source attribution requirements',
+        description: 'Gets to the point quickly, still cites sources',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -69,7 +69,7 @@ Prioritize brevity and clarity over comprehensive detail.`
     {
         id: 'verbose-grounded-rag',
         name: 'Verbose Grounded RAG',
-        description: 'Comprehensive response generation with extensive context extraction',
+        description: 'For when you want all the details and context from your sources',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -98,7 +98,7 @@ Err on the side of providing more information rather than less, while maintainin
     {
         id: 'chain-of-thought-rag',
         name: 'Chain-of-Thought RAG',
-        description: 'Multi-step reasoning framework with explicit intermediate reasoning stages',
+        description: 'Makes the model show its reasoning steps before answering',
         content: `You will answer questions using retrieved context through explicit reasoning steps.
 
 CONTEXT:
@@ -124,7 +124,7 @@ If context is insufficient, explain what specific information is missing.`
     {
         id: 'self-critique-rag',
         name: 'Self-Critique RAG',
-        description: 'Iterative refinement process with systematic accuracy verification',
+        description: 'Has the model check its own work before giving you the answer',
         content: `Answer questions through a self-review process to ensure accuracy.
 
 CONTEXT:
@@ -155,7 +155,7 @@ This ensures accuracy through deliberate verification.`
     {
         id: 'structured-rag',
         name: 'Structured RAG',
-        description: 'Standardized output format for programmatic consumption and parsing',
+        description: 'Returns answers in a consistent format - easier to parse',
         content: `Provide answers in consistent structured format for easy parsing.
 
 CONTEXT:
@@ -217,7 +217,7 @@ Provide a unified view of what the sources collectively say.`
     {
         id: 'structured-critique-rag',
         name: 'Structured Self-Critique RAG',
-        description: 'Combines structured output formatting with verification methodology',
+        description: 'Structured output plus self-checking - best of both approaches',
         content: `Answer questions using a structured format with built-in self-critique.
 
 CONTEXT:
@@ -255,7 +255,7 @@ This combines accuracy verification with consistent formatting.`
     {
         id: 'balanced-grounded-rag',
         name: 'Balanced Grounded RAG',
-        description: 'Balances strict source adherence with conversational response quality',
+        description: 'Good middle ground - accurate but still conversational',
         content: `Answer questions with balanced rigor and helpfulness while staying grounded in context.
 
 CONTEXT:
