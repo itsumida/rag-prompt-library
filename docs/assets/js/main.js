@@ -302,13 +302,22 @@ function vote(promptId, value) {
     const votes = getVotes();
     const userVotes = getUserVotes();
 
+    // If user already voted
     if (userVotes[promptId]) {
+        // Remove the previous vote
         votes[promptId] = (votes[promptId] || 0) - userVotes[promptId];
-    }
 
-    if (userVotes[promptId] === value) {
-        delete userVotes[promptId];
-    } else {
+        // If clicking the same button, just remove vote (toggle off)
+        if (userVotes[promptId] === value) {
+            delete userVotes[promptId];
+        }
+        // If clicking opposite button, just neutralize (don't switch to opposite)
+        else {
+            delete userVotes[promptId];
+        }
+    }
+    // No previous vote, add new vote
+    else {
         votes[promptId] = (votes[promptId] || 0) + value;
         userVotes[promptId] = value;
     }
