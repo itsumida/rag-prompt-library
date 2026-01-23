@@ -331,7 +331,12 @@ function getUserId() {
 // Get vote count for a prompt
 async function getVoteCount(promptId) {
     try {
-        const { data, error } = await supabase
+        if (!supabaseClient) {
+            console.error('Supabase client not initialized');
+            return 0;
+        }
+
+        const { data, error } = await supabaseClient
             .from('votes')
             .select('vote')
             .eq('prompt_id', promptId);
@@ -351,8 +356,13 @@ async function getVoteCount(promptId) {
 // Get user's vote for a prompt
 async function getUserVote(promptId) {
     try {
+        if (!supabaseClient) {
+            console.error('Supabase client not initialized');
+            return 0;
+        }
+
         const userId = getUserId();
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('votes')
             .select('vote')
             .eq('prompt_id', promptId)
@@ -373,10 +383,15 @@ async function getUserVote(promptId) {
 // Vote on a prompt
 async function vote(promptId, value) {
     try {
+        if (!supabaseClient) {
+            console.error('Supabase client not initialized');
+            return 0;
+        }
+
         const userId = getUserId();
 
         // Check if user already voted
-        const { data: existingVote, error: fetchError } = await supabase
+        const { data: existingVote, error: fetchError } = await supabaseClient
             .from('votes')
             .select('*')
             .eq('prompt_id', promptId)
@@ -390,7 +405,7 @@ async function vote(promptId, value) {
         if (existingVote) {
             // If clicking the same button, remove vote (toggle off)
             if (existingVote.vote === value) {
-                const { error: deleteError } = await supabase
+                const { error: deleteError } = await supabaseClient
                     .from('votes')
                     .delete()
                     .eq('prompt_id', promptId)
@@ -400,7 +415,7 @@ async function vote(promptId, value) {
             }
             // If clicking opposite button, neutralize (remove vote)
             else {
-                const { error: deleteError } = await supabase
+                const { error: deleteError } = await supabaseClient
                     .from('votes')
                     .delete()
                     .eq('prompt_id', promptId)
@@ -411,7 +426,7 @@ async function vote(promptId, value) {
         }
         // No previous vote, add new vote
         else {
-            const { error: insertError } = await supabase
+            const { error: insertError } = await supabaseClient
                 .from('votes')
                 .insert([
                     { prompt_id: promptId, user_id: userId, vote: value }
