@@ -215,65 +215,6 @@ RESPONSE FORMAT:
 Provide a unified view of what the sources collectively say.`
     },
     {
-        id: 'fallback-aware-rag',
-        name: 'Fallback-Aware RAG',
-        description: 'Graceful handling of missing information with partial answers',
-        content: `Provide answers when possible, gracefully handle gaps when information is missing.
-
-CONTEXT:
-{retrieved_documents}
-
-QUESTION:
-{user_question}
-
-ASSESSMENT:
-First, determine: Can this question be answered with the provided context?
-- Fully answerable: Provide complete answer with citations
-- Partially answerable: Answer what you can, explicitly note gaps
-- Not answerable: Clearly state what information is missing
-
-RESPONSE:
-
-[If fully/partially answerable:]
-[Answer based on available context with citations [chunk_id]]
-
-**WHAT I CAN CONFIRM:** [Facts supported by context]
-**WHAT I CANNOT CONFIRM:** [Aspects not covered by context]
-
-[If not answerable:]
-"I cannot answer this question because the provided context does not contain information about [specific missing elements]."
-
-Be transparent about knowledge boundaries while maximizing helpfulness.`
-    },
-    {
-        id: 'cite-and-quote-rag',
-        name: 'Cite & Quote RAG',
-        description: 'Balance paraphrasing with direct quotes for credibility',
-        content: `Provide answers that balance your paraphrasing with direct quotations from sources.
-
-CONTEXT:
-{retrieved_documents}
-
-QUESTION:
-{user_question}
-
-ANSWERING APPROACH:
-- Start with a direct answer citing the source [chunk_id]
-- Support with a relevant direct quote: "exact text from source"[chunk_id]
-- Paraphrase additional supporting details with citations
-- Use quotes for: key definitions, specific numbers/dates, policy statements
-- Use paraphrasing for: general concepts, synthesized information
-
-RESPONSE FORMAT:
-[Opening statement with citation[chunk_id]]
-
-According to the source: "[relevant direct quote]"[chunk_id]
-
-[Additional paraphrased context with citations]
-
-Balance quotations with synthesis to provide both accuracy and readability.`
-    },
-    {
         id: 'structured-critique-rag',
         name: 'Structured Self-Critique RAG',
         description: 'Combines structured output with self-review for maximum accuracy',
@@ -462,7 +403,6 @@ function renderPromptCard(prompt) {
     card.dataset.votes = voteCount;
 
     card.innerHTML = `
-        <h2 class="prompt-title">${prompt.name}</h2>
         <p class="prompt-description">${prompt.description}</p>
         <div class="prompt-content">${prompt.content}</div>
         <div class="prompt-actions">
@@ -486,42 +426,16 @@ function renderPromptCard(prompt) {
     return card;
 }
 
-// Current sort mode
-let currentSort = 'default'; // 'default' or 'votes'
-
 // Render all prompts
-function renderPrompts(sortMode = currentSort) {
+function renderPrompts() {
     const container = document.getElementById('prompts-container');
     container.innerHTML = '';
 
-    let displayPrompts = [...prompts];
-
-    if (sortMode === 'votes') {
-        displayPrompts.sort((a, b) => {
-            return getVoteCount(b.id) - getVoteCount(a.id);
-        });
-    }
-    // else keep default order
-
-    displayPrompts.forEach(prompt => {
+    prompts.forEach(prompt => {
         container.appendChild(renderPromptCard(prompt));
     });
 
     addEventListeners();
-    updateSortButtons(sortMode);
-}
-
-// Update sort button states
-function updateSortButtons(sortMode) {
-    document.querySelectorAll('.sort-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-
-    if (sortMode === 'votes') {
-        document.getElementById('sort-by-votes').classList.add('active');
-    } else {
-        document.getElementById('sort-default').classList.add('active');
-    }
 }
 
 // Event listeners
@@ -566,21 +480,7 @@ function addEventListeners() {
     });
 }
 
-// Sort button handlers
-function addSortListeners() {
-    document.getElementById('sort-by-votes').addEventListener('click', () => {
-        currentSort = 'votes';
-        renderPrompts('votes');
-    });
-
-    document.getElementById('sort-default').addEventListener('click', () => {
-        currentSort = 'default';
-        renderPrompts('default');
-    });
-}
-
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    addSortListeners();
-    renderPrompts('default');
+    renderPrompts();
 });

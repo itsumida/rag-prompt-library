@@ -40,49 +40,12 @@ body {
     max-width: 720px;
 }
 
-/* Sort Controls */
-.sort-controls {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 32px 0 24px 0;
-}
-
-.sort-label {
-    font-size: 14px;
-    color: #666;
-    font-weight: 500;
-}
-
-.sort-btn {
-    padding: 8px 18px;
-    background: #ffffff;
-    border: 1px solid #e5e5e5;
-    color: #666;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.sort-btn:hover {
-    border-color: #000;
-    color: #000;
-}
-
-.sort-btn.active {
-    background: #000000;
-    border-color: #000000;
-    color: #ffffff;
-}
-
 /* Prompts Grid - 2 columns x 5 rows */
 .prompts-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    padding: 16px 0 32px 0;
+    padding: 32px 0;
 }
 
 /* Prompt Card */
@@ -103,19 +66,12 @@ body {
     transform: translateY(-2px);
 }
 
-.prompt-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #000000;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-}
-
 .prompt-description {
-    font-size: 13px;
-    color: #666;
+    font-size: 14px;
+    color: #000;
     margin-bottom: 16px;
     line-height: 1.6;
+    font-weight: 600;
 }
 
 .prompt-content {
