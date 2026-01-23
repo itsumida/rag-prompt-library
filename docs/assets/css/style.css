@@ -25,17 +25,6 @@ body {
     background: #fafafa;
 }
 
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 32px;
-}
-
-.header-text {
-    flex: 1;
-}
-
 .header h1 {
     font-size: 28px;
     font-weight: 700;
@@ -49,23 +38,6 @@ body {
     color: #555;
     line-height: 1.7;
     max-width: 720px;
-}
-
-.github-link {
-    color: #000;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: opacity 0.2s;
-    white-space: nowrap;
-    padding: 10px 20px;
-    border: 1px solid #e5e5e5;
-    border-radius: 6px;
-    background: #fff;
-}
-
-.github-link:hover {
-    opacity: 0.7;
 }
 
 /* Sort Controls */
@@ -252,6 +224,34 @@ body {
     text-align: center;
 }
 
+/* Footer */
+.footer {
+    padding: 48px 0;
+    border-top: 1px solid #e5e5e5;
+    background: #fafafa;
+    margin-top: 48px;
+}
+
+.footer-text {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.footer-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.footer-link:hover {
+    opacity: 0.7;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .prompts-grid {
@@ -261,12 +261,6 @@ body {
 
     .prompt-card {
         min-height: auto;
-    }
-
-    .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
     }
 }
 
@@ -298,5 +292,14 @@ body {
 
     .sort-controls {
         flex-wrap: wrap;
+    }
+
+    .footer {
+        padding: 36px 0;
+        margin-top: 36px;
+    }
+
+    .footer-text {
+        font-size: 13px;
     }
 }
