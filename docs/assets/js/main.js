@@ -367,20 +367,42 @@ function renderPromptCard(prompt) {
     return card;
 }
 
-// Render all prompts sorted by votes
-function renderPrompts() {
+// Current sort mode
+let currentSort = 'default'; // 'default' or 'votes'
+
+// Render all prompts
+function renderPrompts(sortMode = currentSort) {
     const container = document.getElementById('prompts-container');
     container.innerHTML = '';
 
-    const sortedPrompts = [...prompts].sort((a, b) => {
-        return getVoteCount(b.id) - getVoteCount(a.id);
-    });
+    let displayPrompts = [...prompts];
 
-    sortedPrompts.forEach(prompt => {
+    if (sortMode === 'votes') {
+        displayPrompts.sort((a, b) => {
+            return getVoteCount(b.id) - getVoteCount(a.id);
+        });
+    }
+    // else keep default order
+
+    displayPrompts.forEach(prompt => {
         container.appendChild(renderPromptCard(prompt));
     });
 
     addEventListeners();
+    updateSortButtons(sortMode);
+}
+
+// Update sort button states
+function updateSortButtons(sortMode) {
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    if (sortMode === 'votes') {
+        document.getElementById('sort-by-votes').classList.add('active');
+    } else {
+        document.getElementById('sort-default').classList.add('active');
+    }
 }
 
 // Event listeners
@@ -418,12 +440,26 @@ function addEventListeners() {
                 card.querySelector('.downvote-btn').classList.add('voted-down');
             }
 
-            renderPrompts();
+            // Don't re-render/re-sort automatically - let user control sorting
         });
+    });
+}
+
+// Sort button handlers
+function addSortListeners() {
+    document.getElementById('sort-by-votes').addEventListener('click', () => {
+        currentSort = 'votes';
+        renderPrompts('votes');
+    });
+
+    document.getElementById('sort-default').addEventListener('click', () => {
+        currentSort = 'default';
+        renderPrompts('default');
     });
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    renderPrompts();
+    addSortListeners();
+    renderPrompts('default');
 });

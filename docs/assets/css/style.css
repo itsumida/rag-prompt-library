@@ -49,12 +49,45 @@ body {
     color: #000;
 }
 
-/* Prompts Grid - 2 columns x 4 rows */
+/* Sort Controls */
+.sort-controls {
+    display: flex;
+    gap: 12px;
+    padding: 24px 0 16px 0;
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 16px;
+}
+
+.sort-btn {
+    padding: 8px 16px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    color: #666;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sort-btn:hover {
+    background: #f0f0f0;
+    border-color: #d0d0d0;
+    color: #000;
+}
+
+.sort-btn.active {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+/* Prompts Grid - 2 columns x 5 rows */
 .prompts-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    padding: 32px 0;
+    padding: 16px 0 32px 0;
 }
 
 /* Prompt Card */
