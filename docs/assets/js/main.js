@@ -1,4 +1,4 @@
-// 10 Research-Backed RAG Prompt Templates
+// 9 Research-Backed RAG Prompt Templates
 // Based on best practices from Scoutos, OpenAI community, and RAG implementation guides
 const prompts = [
     {
@@ -278,43 +278,6 @@ Strike a balance between strict accuracy and user helpfulness. Be as useful as p
 
 Prioritize both precision and practicality.`
     },
-    {
-        id: 'confidence-aware-rag',
-        name: 'Confidence-Aware RAG',
-        description: 'Know what you know. Signal uncertainty.',
-        content: `Answer questions with explicit confidence assessment based on CONTEXT quality.
-
-CONTEXT:
-{retrieved_documents}
-
-QUESTION:
-{user_question}
-
-PROCESS:
-1. Analyze CONTEXT for relevant information
-2. Extract answer with citations [chunk_id]
-3. Assess confidence level:
-   - HIGH: Multiple clear sources, complete information
-   - MEDIUM: Single source or partial information
-   - LOW: Vague, conflicting, or minimal information
-
-RESPONSE FORMAT:
-
-**Answer:**
-[Response with complete citations[chunk_id]]
-
-**Confidence Level:** HIGH / MEDIUM / LOW
-
-**Reasoning:**
-[Explain why this confidence level - source clarity, completeness, conflicts]
-
-**Coverage:**
-[What aspects are well-covered vs. what's missing]
-
-If insufficient information: "CANNOT ANSWER - Context lacks information on [specific topic]"
-
-Help users understand the reliability of the answer based on available sources.`
-    }
 ];
 
 // Vote management (Supabase)
