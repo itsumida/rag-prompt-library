@@ -357,9 +357,9 @@ function renderPromptCard(prompt) {
         <div class="prompt-actions">
             <button class="copy-btn" data-id="${prompt.id}">Copy</button>
             <div class="vote-container">
-                <button class="vote-btn upvote-btn ${userVote === 1 ? 'voted-up' : ''}" data-id="${prompt.id}" data-value="1">👍</button>
+                <button class="vote-btn upvote-btn ${userVote === 1 ? 'voted-up' : ''}" data-id="${prompt.id}" data-value="1">▲</button>
                 <span class="vote-count">${voteCount}</span>
-                <button class="vote-btn downvote-btn ${userVote === -1 ? 'voted-down' : ''}" data-id="${prompt.id}" data-value="-1">👎</button>
+                <button class="vote-btn downvote-btn ${userVote === -1 ? 'voted-down' : ''}" data-id="${prompt.id}" data-value="-1">▼</button>
             </div>
         </div>
     `;
