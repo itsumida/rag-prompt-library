@@ -1,4 +1,4 @@
-// 7 Research-Backed RAG Prompt Templates
+// 10 Research-Backed RAG Prompt Templates
 // Based on best practices from Scoutos, OpenAI community, and RAG implementation guides
 const prompts = [
     {
@@ -19,6 +19,81 @@ If the CONTEXT doesn't contain enough information to fully answer the QUESTION, 
 Match the language of the user's QUESTION in your response.
 
 Provide a clear, factual answer based solely on the CONTEXT provided.`
+    },
+    {
+        id: 'strict-citation-rag',
+        name: 'Strict Citation RAG',
+        description: 'Conservative approach with mandatory citations and no assumptions',
+        content: `You are an AI assistant. Provide accurate responses based STRICTLY on the provided search results.
+
+CONTEXT:
+{retrieved_documents}
+
+QUESTION:
+{user_question}
+
+STRICT GUIDELINES:
+1. ONLY answer using information explicitly found in the CONTEXT
+2. Citations are MANDATORY for every factual statement: [chunk_id]
+3. If CONTEXT doesn't contain information to fully answer, state: "I cannot fully answer this question based on the available information" and explain what's missing
+4. Do not infer, assume, or add external knowledge
+5. Match the language of the user's QUESTION
+6. Include relevant direct quotes from CONTEXT with citations
+7. Do not preface with "based on the context" - simply provide cited answer
+
+If CONTEXT is irrelevant or insufficient: "I cannot answer this question as the provided context does not contain relevant information about [specific topic]."`
+    },
+    {
+        id: 'concise-grounded-rag',
+        name: 'Concise Grounded RAG',
+        description: 'Brief, direct answers with essential citations only',
+        content: `CONTEXT:
+{retrieved_documents}
+
+QUESTION:
+{user_question}
+
+INSTRUCTIONS:
+Provide a brief, direct answer from the CONTEXT above.
+- Answer in 1-3 sentences maximum
+- Cite key facts with [chunk_id]
+- Skip elaboration unless essential
+- If no information available: "Not found in context"
+- Match user's language
+- Get straight to the point
+
+Example format: "The deadline is March 15[2]. Extensions require approval[2]."
+
+Prioritize brevity and clarity over comprehensive detail.`
+    },
+    {
+        id: 'verbose-grounded-rag',
+        name: 'Verbose Grounded RAG',
+        description: 'Comprehensive answers with extensive citations and detail',
+        content: `CONTEXT:
+{retrieved_documents}
+
+QUESTION:
+{user_question}
+
+INSTRUCTIONS:
+Provide thorough, detailed answers from the CONTEXT above with comprehensive citations.
+
+APPROACH:
+1. Extract ALL relevant information from CONTEXT
+2. Cite every claim with [chunk_id] notation
+3. Include supporting details and context
+4. Provide multiple perspectives if present
+5. Quote extensively with citations
+6. Explain nuances and qualifications
+7. If information is incomplete, detail exactly what's missing
+
+FORMAT:
+**Main Answer:** [Detailed response with citations]
+**Additional Context:** [Supporting information]
+**Limitations:** [What CONTEXT doesn't cover]
+
+Err on the side of providing more information rather than less, while maintaining strict grounding.`
     },
     {
         id: 'chain-of-thought-rag',
@@ -197,6 +272,107 @@ According to the source: "[relevant direct quote]"[chunk_id]
 [Additional paraphrased context with citations]
 
 Balance quotations with synthesis to provide both accuracy and readability.`
+    },
+    {
+        id: 'structured-critique-rag',
+        name: 'Structured Self-Critique RAG',
+        description: 'Combines structured output with self-review for maximum accuracy',
+        content: `Answer questions using a structured format with built-in self-critique.
+
+CONTEXT:
+{retrieved_documents}
+
+QUESTION:
+{user_question}
+
+PROCESS:
+
+**DRAFT ANSWER:**
+[Initial response based on CONTEXT with citations [chunk_id]]
+
+**SELF-REVIEW CHECKLIST:**
+- [ ] Every claim has a citation
+- [ ] No information added beyond CONTEXT
+- [ ] No contradictions with sources
+- [ ] Language matches user's QUESTION
+
+**FINAL STRUCTURED ANSWER:**
+
+**Direct Answer:** [One sentence with citation[chunk_id]]
+
+**Details:**
+• [Point 1 with citation[chunk_id]]
+• [Point 2 with citation[chunk_id]]
+• [Point 3 with citation[chunk_id]]
+
+**Confidence:** [HIGH/MEDIUM/LOW based on source clarity]
+
+**Gaps:** [What CONTEXT doesn't address]
+
+This combines accuracy verification with consistent formatting.`
+    },
+    {
+        id: 'balanced-grounded-rag',
+        name: 'Balanced Grounded RAG',
+        description: 'Balanced rigor and helpfulness with clear citations',
+        content: `Answer questions with balanced rigor and helpfulness while staying grounded in context.
+
+CONTEXT:
+{retrieved_documents}
+
+QUESTION:
+{user_question}
+
+GUIDELINES:
+1. Base all answers on CONTEXT with [chunk_id] citations
+2. If information is partial, answer what you can and note gaps clearly
+3. Use clear, conversational language while maintaining accuracy
+4. Cite sources naturally: "The policy states X[2]"
+5. If completely unable to answer: "The context doesn't address this question"
+6. Provide helpful context from available information
+7. Match the user's language and tone
+
+APPROACH:
+Strike a balance between strict accuracy and user helpfulness. Be as useful as possible within the constraints of available information, while never inventing or assuming facts not present in CONTEXT.
+
+Prioritize both precision and practicality.`
+    },
+    {
+        id: 'confidence-aware-rag',
+        name: 'Confidence-Aware RAG',
+        description: 'Explicit confidence levels based on source quality and coverage',
+        content: `Answer questions with explicit confidence assessment based on CONTEXT quality.
+
+CONTEXT:
+{retrieved_documents}
+
+QUESTION:
+{user_question}
+
+PROCESS:
+1. Analyze CONTEXT for relevant information
+2. Extract answer with citations [chunk_id]
+3. Assess confidence level:
+   - HIGH: Multiple clear sources, complete information
+   - MEDIUM: Single source or partial information
+   - LOW: Vague, conflicting, or minimal information
+
+RESPONSE FORMAT:
+
+**Answer:**
+[Response with complete citations[chunk_id]]
+
+**Confidence Level:** HIGH / MEDIUM / LOW
+
+**Reasoning:**
+[Explain why this confidence level - source clarity, completeness, conflicts]
+
+**Coverage:**
+[What aspects are well-covered vs. what's missing]
+
+If insufficient information: "CANNOT ANSWER - Context lacks information on [specific topic]"
+
+Help users understand the reliability of the answer based on available sources.`
     }
 ];
 
