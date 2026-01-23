@@ -4,7 +4,7 @@ const prompts = [
     {
         id: 'grounded-basic-rag',
         name: 'Grounded Basic RAG',
-        description: 'Context-only answers. Every claim must be cited.',
+        description: 'Context-only answers. Every claim must be cited',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -23,7 +23,7 @@ Provide a clear, factual answer based solely on the CONTEXT provided.`
     {
         id: 'strict-citation-rag',
         name: 'Strict Citation RAG',
-        description: 'Strict grounding. No inference or external knowledge.',
+        description: 'Strict grounding. No inference or external knowledge',
         content: `You are an AI assistant. Provide accurate responses based STRICTLY on the provided search results.
 
 CONTEXT:
@@ -46,7 +46,7 @@ If CONTEXT is irrelevant or insufficient: "I cannot answer this question as the 
     {
         id: 'concise-grounded-rag',
         name: 'Concise Grounded RAG',
-        description: 'Short, direct answers with citations.',
+        description: 'Short, direct answers with citations',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -69,7 +69,7 @@ Prioritize brevity and clarity over comprehensive detail.`
     {
         id: 'verbose-grounded-rag',
         name: 'Verbose Grounded RAG',
-        description: 'Complete extraction from sources, fully cited.',
+        description: 'Complete extraction from sources, fully cited',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -98,7 +98,7 @@ Err on the side of providing more information rather than less, while maintainin
     {
         id: 'chain-of-thought-rag',
         name: 'Chain-of-Thought RAG',
-        description: 'Reasoning steps made explicit.',
+        description: 'Reasoning steps made explicit',
         content: `You will answer questions using retrieved context through explicit reasoning steps.
 
 CONTEXT:
@@ -124,7 +124,7 @@ If context is insufficient, explain what specific information is missing.`
     {
         id: 'self-critique-rag',
         name: 'Self-Critique RAG',
-        description: 'Self-checked for unsupported claims.',
+        description: 'Self-checked for unsupported claims',
         content: `Answer questions through a self-review process to ensure accuracy.
 
 CONTEXT:
@@ -155,7 +155,7 @@ This ensures accuracy through deliberate verification.`
     {
         id: 'structured-rag',
         name: 'Structured RAG',
-        description: 'Consistent, structured output.',
+        description: 'Consistent, structured output',
         content: `Provide answers in consistent structured format for easy parsing.
 
 CONTEXT:
@@ -217,7 +217,7 @@ Provide a unified view of what the sources collectively say.`
     {
         id: 'structured-critique-rag',
         name: 'Structured Self-Critique RAG',
-        description: 'Structured output with built-in verification.',
+        description: 'Structured output with built-in verification',
         content: `Answer questions using a structured format with built-in self-critique.
 
 CONTEXT:
@@ -255,7 +255,7 @@ This combines accuracy verification with consistent formatting.`
     {
         id: 'balanced-grounded-rag',
         name: 'Balanced Grounded RAG',
-        description: 'Grounded, readable, and practical.',
+        description: 'Grounded, readable, and practical',
         content: `Answer questions with balanced rigor and helpfulness while staying grounded in context.
 
 CONTEXT:
