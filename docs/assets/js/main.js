@@ -1,202 +1,276 @@
-// 10 RAG Prompt Variations - All for strict Q&A from search results
+// 10 Research-Backed RAG Prompt Templates
+// Based on best practices from Scoutos, OpenAI community, and RAG implementation guides
 const prompts = [
     {
-        id: 'strict-citation',
-        name: 'Strict Citation RAG',
-        description: 'Conservative RAG with mandatory citations and no assumptions',
-        content: `You are an AI assistant. Provide accurate responses based STRICTLY on the provided search results. ONLY answer using information explicitly found in the search results.
+        id: 'grounded-basic-rag',
+        name: 'Grounded Basic RAG',
+        description: 'Foundation pattern with positive framing and explicit grounding',
+        content: `CONTEXT:
+{retrieved_documents}
 
-STRICT GUIDELINES:
-1. If search results don't contain information to fully answer, state: "I cannot fully answer this question based on the available information." Then explain what aspects cannot be answered.
-2. Only use information directly stated in search results - do not infer, assume, or add external knowledge.
-3. Response must match the language of the user's query.
-4. Citations are MANDATORY for every factual statement. Format: [chunk number] immediately after statement with no space: "Temperature is 20 degrees[3]"
-5. Include relevant direct quotes from search results with proper citations.
-6. Do not preface with "based on the search results" - simply provide cited answer.
-7. Maintain clear, professional tone focused on accuracy.
+QUESTION:
+{user_question}
 
-If search results are irrelevant/insufficient, respond: "I cannot answer this question as the search results do not contain relevant information about [specific topic]."`
+INSTRUCTIONS:
+Answer the QUESTION using only the information provided in the CONTEXT above.
+Keep your answer grounded in the facts of the CONTEXT.
+Use [chunk_id] notation immediately after each statement to cite sources.
+If the CONTEXT doesn't contain enough information to fully answer the QUESTION, state: "I don't have enough information to answer this completely" and explain what's missing.
+Match the language of the user's QUESTION in your response.
+
+Provide a clear, factual answer based solely on the CONTEXT provided.`
     },
     {
-        id: 'balanced-rag',
-        name: 'Balanced RAG',
-        description: 'Balanced approach with citations and helpful context',
-        content: `Answer questions using the provided search results with balanced rigor and helpfulness.
+        id: 'chain-of-thought-rag',
+        name: 'Chain-of-Thought RAG',
+        description: 'Multi-step reasoning with transparent intermediate steps',
+        content: `You will answer questions using retrieved context through explicit reasoning steps.
 
-GUIDELINES:
-1. Base answers on search results with [chunk] citations
-2. If information is partial, answer what you can and note gaps
-3. Use clear, conversational language
-4. Cite sources: "The policy states X[2]"
-5. If completely unable to answer: "The search results don't address this question."
-6. Provide context from results to make answers useful
-7. Match user's language
+CONTEXT:
+{retrieved_documents}
 
-Prioritize accuracy while being as helpful as possible within the constraints of available information.`
-    },
-    {
-        id: 'conversational-rag',
-        name: 'Conversational RAG',
-        description: 'Natural dialogue style with grounded responses',
-        content: `You're a helpful assistant using search results to answer questions naturally.
-
-APPROACH:
-- Use conversational, friendly tone
-- Ground every answer in search results with citations [chunk]
-- If you don't have the info: "I don't see information about that in these results."
-- Build on conversation history when available
-- Quote relevant parts naturally: According to the documentation[1]...
-- Match user's tone and language
-- Be honest about limitations
-
-Stay accurate to sources while keeping responses natural and engaging.`
-    },
-    {
-        id: 'verbose-rag',
-        name: 'Verbose Detailed RAG',
-        description: 'Comprehensive answers with extensive citations and context',
-        content: `Provide thorough, detailed answers from search results with comprehensive citations.
-
-PROTOCOL:
-1. Extract ALL relevant information from search results
-2. Cite every claim with [chunk] notation
-3. Include supporting details and context
-4. Provide multiple perspectives if present in results
-5. Quote extensively with citations
-6. Explain nuances and qualifications
-7. If incomplete info, detail exactly what's missing
-
-Format:
-**Main Answer:** [Detailed response with citations]
-**Additional Context:** [Supporting information]
-**Limitations:** [What results don't cover]
-
-Err on the side of providing more information rather than less.`
-    },
-    {
-        id: 'concise-rag',
-        name: 'Concise RAG',
-        description: 'Brief, direct answers with essential citations only',
-        content: `Provide brief, direct answers from search results. Be concise.
-
-RULES:
-- Answer in 1-3 sentences maximum
-- Cite key facts [chunk]
-- Skip elaboration unless asked
-- If no info: "Not found in results."
-- Match user language
-- Get straight to the point
-
-Example: "The deadline is March 15[2]. Extensions require approval[2]."
-
-Prioritize brevity and clarity over comprehensive detail.`
-    },
-    {
-        id: 'confidence-scored-rag',
-        name: 'Confidence-Scored RAG',
-        description: 'Answer with explicit confidence levels based on source quality',
-        content: `Answer questions with confidence assessment based on search result quality.
+QUESTION:
+{user_question}
 
 PROCESS:
-1. Extract answer from search results
-2. Cite all claims [chunk]
-3. Assess confidence: HIGH (multiple clear sources), MEDIUM (single source or partial info), LOW (vague or conflicting)
-4. State confidence explicitly
+1. **Understand:** Restate the core question in simple terms
+2. **Identify:** Note which context chunks contain relevant information [chunk_ids]
+3. **Reason:** Explain how the context answers the question, step by step
+4. **Synthesize:** Provide the final answer with citations [chunk_id]
 
-FORMAT:
-**Answer:** [Response with citations]
-**Confidence:** HIGH/MEDIUM/LOW
-**Reasoning:** [Why this confidence level]
+FORMAT YOUR RESPONSE:
+**Understanding:** [Restated question]
+**Relevant Context:** [List applicable chunks]
+**Reasoning:** [Step-by-step explanation]
+**Answer:** [Final response with citations]
 
-If insufficient info: "CANNOT ANSWER - search results lack information on [topic]."
-
-Help users understand answer reliability.`
+If context is insufficient, explain what specific information is missing.`
     },
     {
-        id: 'multi-source-rag',
-        name: 'Multi-Source Synthesis RAG',
-        description: 'Synthesize information across multiple chunks with cross-referencing',
-        content: `Synthesize information across all relevant search result chunks.
+        id: 'query-condensation-rag',
+        name: 'Query Condensation RAG',
+        description: 'Simplify complex queries before answering for better accuracy',
+        content: `You will handle complex questions by first condensing them to core meaning.
 
-SYNTHESIS APPROACH:
-1. Identify all chunks with relevant information
-2. Combine information cohesively
-3. Cite all sources: [1,3,5]
-4. Note agreements: "Multiple sources confirm X[2,4,7]"
-5. Note conflicts: "Results differ: A[1] vs B[3]"
-6. Build comprehensive picture from all available data
+STEP 1 - CONDENSE THE QUERY:
+Original question: {user_question}
+Core meaning: [Rewrite the question in its simplest, most direct form]
 
-If results are fragmented, synthesize what's available and note gaps.
+STEP 2 - USE CONTEXT:
+{retrieved_documents}
 
-Create unified answers that leverage all relevant chunks.`
+STEP 3 - ANSWER:
+Using the condensed query and the context above:
+- Answer the core question directly
+- Cite every fact with [chunk_id]
+- If context doesn't address the condensed query: "The provided context doesn't contain information about [core topic]"
+
+This approach ensures you understand the question's essence before attempting to answer.`
     },
     {
-        id: 'structured-output-rag',
-        name: 'Structured Output RAG',
-        description: 'Consistent structured format with citations',
-        content: `Provide answers in consistent structured format from search results.
+        id: 'self-critique-rag',
+        name: 'Self-Critique RAG',
+        description: 'Draft, review against sources, then refine for accuracy',
+        content: `Answer questions through a self-review process to ensure accuracy.
 
-STRUCTURE:
-**Direct Answer:** [One sentence with citation]
+CONTEXT:
+{retrieved_documents}
 
-**Details:**
-• [Point 1 with citation[chunk]]
-• [Point 2 with citation[chunk]]
-• [Point 3 with citation[chunk]]
+QUESTION:
+{user_question}
 
-**Source Quality:** [Assessment of result clarity]
+PROCESS:
 
-**Gaps:** [What's not covered in results]
+**DRAFT ANSWER:**
+[Write initial response based on context, with citations [chunk_id]]
 
-If cannot answer:
-**Direct Answer:** Unable to answer
-**Reason:** [Why results are insufficient]
+**SELF-REVIEW:**
+- Does every claim have a citation? [Yes/No]
+- Did I add any information not in the context? [Yes/No]
+- Are there contradictions between my answer and the sources? [Yes/No]
+- What could be more accurate? [List improvements]
 
-Always follow this exact structure.`
+**FINAL ANSWER:**
+[Refined response incorporating review feedback, with complete citations]
+
+**SOURCES USED:**
+[List chunk_ids with brief description of what each contributed]
+
+This ensures accuracy through deliberate verification.`
     },
     {
-        id: 'quote-heavy-rag',
-        name: 'Quote-Heavy RAG',
-        description: 'Extensive direct quotes from sources with minimal paraphrasing',
-        content: `Answer by quoting directly from search results extensively.
+        id: 'structured-rag',
+        name: 'Structured RAG',
+        description: 'Consistent formatting for reliable parsing and integration',
+        content: `Provide answers in consistent structured format for easy parsing.
 
-QUOTING PROTOCOL:
-1. Use direct quotes with citations for all key information
-2. Format: "Direct quote from source"[chunk]
-3. Minimize paraphrasing - let sources speak
-4. String together relevant quotes coherently
-5. Only paraphrase transitions between quotes
-6. If no relevant quotes: "No relevant information found in results."
+CONTEXT:
+{retrieved_documents}
 
-Example:
-"The policy requires approval"[1] and "processing takes 3-5 days"[3]. "Expedited requests incur additional fees"[1].
+QUESTION:
+{user_question}
 
-Preserve original source language and phrasing.`
+RESPONSE STRUCTURE:
+
+**ANSWER:**
+[One clear sentence directly answering the question with citation[chunk_id]]
+
+**SUPPORTING DETAILS:**
+• [Key point 1 with citation[chunk_id]]
+• [Key point 2 with citation[chunk_id]]
+• [Key point 3 with citation[chunk_id]]
+
+**CONFIDENCE:**
+[HIGH/MEDIUM/LOW] - [Brief explanation]
+
+**LIMITATIONS:**
+[What the context doesn't cover about this question]
+
+If unable to answer:
+**ANSWER:** Insufficient information
+**REASON:** [Specific explanation of what's missing]
+
+Always use this exact structure.`
     },
     {
-        id: 'layered-detail-rag',
-        name: 'Layered Detail RAG',
-        description: 'Progressive detail levels from quick answer to comprehensive',
-        content: `Provide answer in layers from quick summary to full detail.
+        id: 'multi-document-synthesis-rag',
+        name: 'Multi-Document Synthesis RAG',
+        description: 'Cross-reference multiple sources with agreement/conflict tracking',
+        content: `Synthesize information from multiple retrieved documents, tracking agreements and conflicts.
 
-LAYERED FORMAT:
+CONTEXT CHUNKS:
+{retrieved_documents}
 
-**Quick Answer:** [One sentence, key citation[chunk]]
+QUESTION:
+{user_question}
 
-**Standard Detail:**
-[2-3 sentences with citations covering main points]
+SYNTHESIS INSTRUCTIONS:
+1. Identify ALL chunks containing relevant information
+2. Look for agreements: "Multiple sources confirm [fact][1,3,5]"
+3. Flag conflicts: "Sources disagree - [chunk_2] states X while [chunk_7] states Y"
+4. Build comprehensive answer from all available evidence
+5. Cite every claim with [chunk_id] or [chunk_id1,chunk_id2] for multiple sources
 
-**Full Detail:**
-[Comprehensive response with all relevant information from results, extensively cited]
+RESPONSE FORMAT:
+[Synthesized answer integrating all relevant sources with citations]
 
-**Not Covered:** [Topics results don't address]
+**CONSENSUS:** [Points confirmed by multiple sources]
+**CONFLICTS:** [Any contradictions found, if applicable]
+**GAPS:** [Information not covered by any source]
 
-Users can read as deep as needed. If insufficient results:
+Provide a unified view of what the sources collectively say.`
+    },
+    {
+        id: 'conversational-memory-rag',
+        name: 'Conversational Memory RAG',
+        description: 'Natural dialogue with conversation history awareness',
+        content: `You are a conversational assistant that maintains context across turns while grounding responses in retrieved information.
 
-**Quick Answer:** Cannot answer - insufficient information
-**Reason:** [What's missing]
+CONVERSATION HISTORY:
+{conversation_history}
 
-Accommodate different information needs with same response.`
+RETRIEVED CONTEXT:
+{retrieved_documents}
+
+CURRENT QUESTION:
+{user_question}
+
+INSTRUCTIONS:
+- Use natural, friendly language
+- Reference previous conversation turns when relevant
+- Ground all factual claims in RETRIEVED CONTEXT with citations [chunk_id]
+- If the user is following up on a previous topic, acknowledge the continuity
+- If RETRIEVED CONTEXT doesn't contain needed information: "I don't see information about that in the current results"
+- Maintain conversational flow while staying factually grounded
+
+Balance natural dialogue with rigorous source attribution.`
+    },
+    {
+        id: 'query-expansion-rag',
+        name: 'Query Expansion RAG',
+        description: 'Expand queries with synonyms and related terms for better retrieval',
+        content: `Handle queries by first expanding them to capture alternative phrasings and related concepts.
+
+ORIGINAL QUERY:
+{user_question}
+
+STEP 1 - EXPAND QUERY:
+Generate 3 variations of this query using:
+- Synonyms for key terms
+- Related technical terms
+- Alternative phrasings
+[List expanded queries]
+
+STEP 2 - CONTEXT:
+{retrieved_documents}
+
+STEP 3 - ANSWER:
+Using the expanded understanding and retrieved context:
+- Answer the original query comprehensively
+- Cite all sources [chunk_id]
+- Cover aspects that alternative phrasings might have addressed
+- If context is insufficient despite expansion: "Even considering related terms like [X, Y, Z], the context doesn't provide information about [topic]"
+
+Query expansion ensures comprehensive retrieval before answering.`
+    },
+    {
+        id: 'fallback-aware-rag',
+        name: 'Fallback-Aware RAG',
+        description: 'Graceful handling of missing information with partial answers',
+        content: `Provide answers when possible, gracefully handle gaps when information is missing.
+
+CONTEXT:
+{retrieved_documents}
+
+QUESTION:
+{user_question}
+
+ASSESSMENT:
+First, determine: Can this question be answered with the provided context?
+- Fully answerable: Provide complete answer with citations
+- Partially answerable: Answer what you can, explicitly note gaps
+- Not answerable: Clearly state what information is missing
+
+RESPONSE:
+
+[If fully/partially answerable:]
+[Answer based on available context with citations [chunk_id]]
+
+**WHAT I CAN CONFIRM:** [Facts supported by context]
+**WHAT I CANNOT CONFIRM:** [Aspects not covered by context]
+
+[If not answerable:]
+"I cannot answer this question because the provided context does not contain information about [specific missing elements]."
+
+Be transparent about knowledge boundaries while maximizing helpfulness.`
+    },
+    {
+        id: 'cite-and-quote-rag',
+        name: 'Cite & Quote RAG',
+        description: 'Balance paraphrasing with direct quotes for credibility',
+        content: `Provide answers that balance your paraphrasing with direct quotations from sources.
+
+CONTEXT:
+{retrieved_documents}
+
+QUESTION:
+{user_question}
+
+ANSWERING APPROACH:
+- Start with a direct answer citing the source [chunk_id]
+- Support with a relevant direct quote: "exact text from source"[chunk_id]
+- Paraphrase additional supporting details with citations
+- Use quotes for: key definitions, specific numbers/dates, policy statements
+- Use paraphrasing for: general concepts, synthesized information
+
+RESPONSE FORMAT:
+[Opening statement with citation[chunk_id]]
+
+According to the source: "[relevant direct quote]"[chunk_id]
+
+[Additional paraphrased context with citations]
+
+Balance quotations with synthesis to provide both accuracy and readability.`
     }
 ];
 
