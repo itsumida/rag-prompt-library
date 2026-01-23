@@ -4,7 +4,7 @@ const prompts = [
     {
         id: 'grounded-basic-rag',
         name: 'Grounded Basic RAG',
-        description: 'Foundation pattern with positive framing and explicit grounding',
+        description: 'Simple. Citations required. No hallucinations.',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -23,7 +23,7 @@ Provide a clear, factual answer based solely on the CONTEXT provided.`
     {
         id: 'strict-citation-rag',
         name: 'Strict Citation RAG',
-        description: 'Conservative approach with mandatory citations and no assumptions',
+        description: 'Maximum accuracy. Zero assumptions. Every claim cited.',
         content: `You are an AI assistant. Provide accurate responses based STRICTLY on the provided search results.
 
 CONTEXT:
@@ -46,7 +46,7 @@ If CONTEXT is irrelevant or insufficient: "I cannot answer this question as the 
     {
         id: 'concise-grounded-rag',
         name: 'Concise Grounded RAG',
-        description: 'Brief, direct answers with essential citations only',
+        description: 'One sentence. One citation. Done.',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -69,7 +69,7 @@ Prioritize brevity and clarity over comprehensive detail.`
     {
         id: 'verbose-grounded-rag',
         name: 'Verbose Grounded RAG',
-        description: 'Comprehensive answers with extensive citations and detail',
+        description: 'Complete detail. Every nuance. Fully cited.',
         content: `CONTEXT:
 {retrieved_documents}
 
@@ -98,7 +98,7 @@ Err on the side of providing more information rather than less, while maintainin
     {
         id: 'chain-of-thought-rag',
         name: 'Chain-of-Thought RAG',
-        description: 'Multi-step reasoning with transparent intermediate steps',
+        description: 'Show your work. Step-by-step reasoning.',
         content: `You will answer questions using retrieved context through explicit reasoning steps.
 
 CONTEXT:
@@ -124,7 +124,7 @@ If context is insufficient, explain what specific information is missing.`
     {
         id: 'self-critique-rag',
         name: 'Self-Critique RAG',
-        description: 'Draft, review against sources, then refine for accuracy',
+        description: 'Draft. Review. Refine. Verify.',
         content: `Answer questions through a self-review process to ensure accuracy.
 
 CONTEXT:
@@ -155,7 +155,7 @@ This ensures accuracy through deliberate verification.`
     {
         id: 'structured-rag',
         name: 'Structured RAG',
-        description: 'Consistent formatting for reliable parsing and integration',
+        description: 'Consistent format. Easy to parse. API-ready.',
         content: `Provide answers in consistent structured format for easy parsing.
 
 CONTEXT:
@@ -217,7 +217,7 @@ Provide a unified view of what the sources collectively say.`
     {
         id: 'structured-critique-rag',
         name: 'Structured Self-Critique RAG',
-        description: 'Combines structured output with self-review for maximum accuracy',
+        description: 'Structure meets verification. Double-checked accuracy.',
         content: `Answer questions using a structured format with built-in self-critique.
 
 CONTEXT:
@@ -255,7 +255,7 @@ This combines accuracy verification with consistent formatting.`
     {
         id: 'balanced-grounded-rag',
         name: 'Balanced Grounded RAG',
-        description: 'Balanced rigor and helpfulness with clear citations',
+        description: 'Accurate yet helpful. Natural but grounded.',
         content: `Answer questions with balanced rigor and helpfulness while staying grounded in context.
 
 CONTEXT:
@@ -281,7 +281,7 @@ Prioritize both precision and practicality.`
     {
         id: 'confidence-aware-rag',
         name: 'Confidence-Aware RAG',
-        description: 'Explicit confidence levels based on source quality and coverage',
+        description: 'Know what you know. Signal uncertainty.',
         content: `Answer questions with explicit confidence assessment based on CONTEXT quality.
 
 CONTEXT:
