@@ -1,4 +1,4 @@
-// 8 Research-Backed RAG Prompt Templates
+// 7 Research-Backed RAG Prompt Templates
 // Based on best practices from Scoutos, OpenAI community, and RAG implementation guides
 const prompts = [
     {
@@ -138,34 +138,6 @@ RESPONSE FORMAT:
 **GAPS:** [Information not covered by any source]
 
 Provide a unified view of what the sources collectively say.`
-    },
-    {
-        id: 'query-expansion-rag',
-        name: 'Query Expansion RAG',
-        description: 'Expand queries with synonyms and related terms for better retrieval',
-        content: `Handle queries by first expanding them to capture alternative phrasings and related concepts.
-
-ORIGINAL QUERY:
-{user_question}
-
-STEP 1 - EXPAND QUERY:
-Generate 3 variations of this query using:
-- Synonyms for key terms
-- Related technical terms
-- Alternative phrasings
-[List expanded queries]
-
-STEP 2 - CONTEXT:
-{retrieved_documents}
-
-STEP 3 - ANSWER:
-Using the expanded understanding and retrieved context:
-- Answer the original query comprehensively
-- Cite all sources [chunk_id]
-- Cover aspects that alternative phrasings might have addressed
-- If context is insufficient despite expansion: "Even considering related terms like [X, Y, Z], the context doesn't provide information about [topic]"
-
-Query expansion ensures comprehensive retrieval before answering.`
     },
     {
         id: 'fallback-aware-rag',
