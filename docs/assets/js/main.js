@@ -427,11 +427,13 @@ function addEventListeners() {
 
     document.querySelectorAll('.vote-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const promptId = e.target.dataset.id;
-            const value = parseInt(e.target.dataset.value);
+            // Use currentTarget to get the button, not the clicked SVG element
+            const button = e.currentTarget;
+            const promptId = button.dataset.id;
+            const value = parseInt(button.dataset.value);
             const newCount = vote(promptId, value);
 
-            const card = e.target.closest('.prompt-card');
+            const card = button.closest('.prompt-card');
             card.dataset.votes = newCount;
             card.querySelector('.vote-count').textContent = newCount;
 
