@@ -358,13 +358,13 @@ function renderPromptCard(prompt) {
             <button class="copy-btn" data-id="${prompt.id}">Copy</button>
             <div class="vote-container">
                 <button class="vote-btn upvote-btn ${userVote === 1 ? 'voted-up' : ''}" data-id="${prompt.id}" data-value="1">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12 4l8 8H4z" fill="currentColor"/>
                     </svg>
                 </button>
                 <span class="vote-count">${voteCount}</span>
                 <button class="vote-btn downvote-btn ${userVote === -1 ? 'voted-down' : ''}" data-id="${prompt.id}" data-value="-1">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12 20l-8-8h16z" fill="currentColor"/>
                     </svg>
                 </button>
